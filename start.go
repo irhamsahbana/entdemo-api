@@ -33,9 +33,7 @@ func main() {
 	userService := service.UserNewService(userRepository)
 	userController := controller.UserNewController(userService)
 
-	//CreateUser(context.Background(),client)
-
-
+	
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/",rootController)

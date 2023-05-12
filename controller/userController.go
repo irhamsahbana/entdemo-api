@@ -17,6 +17,7 @@ func UserNewController(userService service.UserService) *userController {
 	return &userController{userService}
 }
 
+
 func (c *userController) UserGetAllController(w http.ResponseWriter, r *http.Request) {
 
 	users, err := c.userService.FindAll()
