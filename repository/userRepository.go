@@ -6,23 +6,23 @@ import (
 )
 
 type UserRepository interface {
-	FindAll()([]*ent.User, error)
-	FindByID(ID int)(*ent.User, error)
-	UserCreate(newUser ent.User) (*ent.User, error)
+	FindAll(ctx context.Context)([]*ent.User, error)
+	FindByID(ctx context.Context, ID int)(*ent.User, error)
+	UserCreate(ctx context.Context, newUser ent.User) (*ent.User, error)
 }
 
 type userRepository struct{
-	ctx context.Context
+	
 	client *ent.Client
 }
 
-func UserNewRepository(client *ent.Client, ctx context.Context) *userRepository {
-	return &userRepository{ctx: ctx, client: client} 
+func UserNewRepository(client *ent.Client) *userRepository {
+	return &userRepository{client: client} 
 }
 
-func (r *userRepository)FindAll()([]*ent.User, error)  {
+func (r *userRepository)FindAll(ctx context.Context)([]*ent.User, error)  {
 
-	users, err := r.client.User.Query().All(r.ctx)
+	users, err := r.client.User.Query().All(ctx)
 	
 	if err != nil {
 		return nil, err
@@ -31,9 +31,9 @@ func (r *userRepository)FindAll()([]*ent.User, error)  {
 	return users, nil
 }
 
-func (r *userRepository) FindByID(ID int)(*ent.User, error) {
+func (r *userRepository) FindByID(ctx context.Context, ID int)(*ent.User, error) {
 	
-	user, err := r.client.User.Get(r.ctx, ID)
+	user, err := r.client.User.Get(ctx, ID)
 	
 	if err != nil {
 		return nil, err
@@ -43,11 +43,11 @@ func (r *userRepository) FindByID(ID int)(*ent.User, error) {
 }
 
 
-func (r *userRepository) UserCreate(newUser ent.User) (*ent.User, error) {
+func (r *userRepository) UserCreate(ctx context.Context, newUser ent.User) (*ent.User, error) {
 	newCreatedUser, err := r.client.User.Create().
 			SetAge(newUser.Age).
 			SetName(newUser.Name).
-			Save(r.ctx)
+			Save(ctx)
 
 	if err != nil {
 		return nil, err

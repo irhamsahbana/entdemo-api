@@ -18,5 +18,6 @@ func Return(w http.ResponseWriter, status bool, code int, err error, data interf
 		response.Error = err.Error()
 	}
 
+	w.Header().Set("Content-Type","application/json")
 	json.NewEncoder(w).Encode(response)
 }
